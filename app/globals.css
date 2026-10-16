@@ -1,0 +1,1636 @@
+/**
+ * globals.css
+ *
+ * The complete design system for Apurav's portfolio.
+ *
+ * Structure:
+ *   1. Tailwind import
+ *   2. Design tokens (CSS custom properties)
+ *   3. Base reset & typography
+ *   4. Shell layout utilities
+ *   5. Scrollbar styling
+ */
+
+/* ─── 1. TAILWIND ─────────────────────────────────────────────────────────── */
+@import "tailwindcss";
+
+/* ─── 2. DESIGN TOKENS ────────────────────────────────────────────────────── */
+
+/*
+ * We use CSS custom properties so every value is defined in one place
+ * and can be read/overridden from any component.
+ *
+ * Color naming follows a semantic approach, not a generic palette:
+ *   --color-surface-*   → background/surface colors
+ *   --color-text-*      → text colors
+ *   --color-border-*    → border colors
+ *   --color-accent-*    → the single restrained accent
+ */
+
+:root {
+  /* Surfaces */
+  --color-surface-base: #E5DED1;
+  /* overall canvas — the main background */
+  --color-surface-paper: #E5DED1;
+  /* center workspace surface */
+  --color-surface-ink: #171613;
+  /* near-black — primary text background */
+  --color-surface-panel-left: #D8CFBF;
+  /* left navigation surface — shares the top bar tone to read as one frame */
+  --color-surface-panel-right: #E5DED1;
+  /* right information rail surface — shares the center workspace paper */
+  --color-surface-panel-upper: #D8CFBF;
+  /* upper system bar surface */
+
+  /* Text */
+  --color-text-primary: #171613;
+  /* near black — headlines, labels */
+  --color-text-secondary: #777166;
+  /* muted — body text, descriptions */
+  --color-text-muted: #777166;
+  /* secondary labels, numbers */
+  --color-text-inverse: #f5f2ee;
+  /* text on dark backgrounds */
+
+  /* Borders */
+  --color-border-subtle: #BDB4A5;
+  /* dusty-taupe — every structural divider (top bar, sidebar, sections) */
+  --color-border-medium: #BDB4A5;
+  /* slightly stronger border */
+
+  /* Accent — restrained muted ochre */
+  --color-accent: #B7862D;
+  /* muted amber/ochre — used sparingly */
+  --color-accent-dim: #B7862D;
+  /* slightly lighter for hover states */
+
+  /* Fonts — wired from layout.tsx Google Font variables */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "Courier New", monospace;
+  --font-display: var(--font-inter-tight), "Inter", system-ui, sans-serif;
+  /* Overview hero headline */
+
+  /* Overview status colors */
+  --color-status-live: #1F5A3A;
+  /* deep green — LIVE / ACTIVE */
+  --color-status-running: #C48A1A;
+  /* amber — RUNNING / IN PROGRESS */
+  --color-ink: #171613;
+  /* near-black for headlines */
+  --color-hairline: #BDB4A5;
+  /* 1px dividers — matches the structural border token */
+
+
+  /* Spacing scale — kept small and understandable */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* Shell dimensions */
+  --shell-top-height: 56px;
+  /* height of the fixed top identity bar */
+  --shell-left-width: 200px;
+  /* width of the fixed left navigation */
+  --shell-right-width: 220px;
+  /* width of the fixed right Featured panel */
+  --shell-center-height: calc(100dvh - var(--shell-top-height));
+  /* available center height */
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Typography scale */
+  --text-xs: 0.6875rem;
+  /* 11px */
+  --text-sm: 0.8125rem;
+  /* 13px */
+  --text-base: 0.9375rem;
+  /* 15px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.375rem;
+  /* 22px */
+  --text-2xl: 1.75rem;
+  /* 28px */
+  --text-3xl: 2.25rem;
+  /* 36px */
+
+  /* Layering scale — Portfolio 3-Layer Architecture */
+  --layer-01-background: 0;
+  /* Layer 01: Portfolio background */
+  --layer-02-sections: 10;
+  /* Layer 02: Top identity, Left index, Center content, Featured panel */
+  --layer-03-wallet: 100;
+  /* Layer 03: Global independent wallet layer (Above ALL portfolio sections) */
+
+  /* Structural z-index scale */
+  --layer-base: 0;
+  --layer-surface: 10;
+  --layer-paper: 20;
+  --layer-photo: 30;
+  --layer-tape: 40;
+  --layer-object: 50;
+  --layer-overlay: 60;
+  --layer-wallet: 100;
+}
+
+/* ─── 3. BASE RESET & TYPOGRAPHY ──────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Prevent font size inflation on mobile */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scrolling within containers */
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--color-surface-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  /* Prevent body scroll on desktop — the center column scrolls instead */
+  overflow: hidden;
+  overflow-x: hidden;
+}
+
+/* Mobile: allow body scroll while preventing horizontal overflow */
+@media (max-width: 900px) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* Typography defaults */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+p {
+  color: var(--color-text-secondary);
+  /* 60ch reading width only for body copy paragraphs, not layout/UI text */
+}
+
+/* Monospace — only for actual code, not decoration */
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Links — restrained, no underline by default */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Visible focus state for keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── 4. SHELL LAYOUT ─────────────────────────────────────────────────────── */
+
+/*
+ * The portfolio shell uses CSS Grid to create the three-column fixed layout.
+ *
+ * Grid areas on desktop:
+ *
+ *   ┌─────────────────────────────────────────────────┐
+ *   │                    top-identity                 │
+ *   ├──────────────┬────────────────────┬─────────────┤
+ *   │  section-    │                    │   featured  │
+ *   │  index       │   portfolio-       │   panel     │
+ *   │  (fixed)     │   content          │   (fixed)   │
+ *   │              │   (scrolls)        │             │
+ *   └──────────────┴────────────────────┴─────────────┘
+ */
+
+.portfolio-shell {
+  display: grid;
+  grid-template-rows: var(--shell-top-height) 1fr;
+  grid-template-columns: var(--shell-left-width) 1fr var(--shell-right-width);
+  grid-template-areas:
+    "top top top"
+    "index content featured";
+  height: 100dvh;
+  /* dynamic viewport height — handles mobile browser chrome */
+  overflow: hidden;
+}
+
+/* Top identity bar — spans all columns */
+.shell-top {
+  grid-area: top;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-panel-upper);
+}
+
+/* Left navigation — fixed via grid, no scrolling */
+.shell-index {
+  grid-area: index;
+  overflow: hidden;
+  /* no scroll — nav is always fully visible */
+  border-right: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-panel-left);
+}
+
+/* Center content — the ONLY scrolling column */
+.shell-content {
+  grid-area: content;
+  overflow-y: auto;
+  /* this is the primary scroll container */
+  overflow-x: hidden;
+  min-width: 0;
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 901px) {
+  .shell-content {
+    scroll-snap-type: y mandatory;
+  }
+}
+
+/* Right featured panel — fixed via grid, no scrolling */
+.shell-featured {
+  grid-area: featured;
+  overflow: hidden;
+  border-left: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-panel-right);
+}
+
+/* ─── SECTION INDEX — TECHNICAL EDITORIAL NAVIGATION ──────────────────────── */
+/*
+ * Base (desktop-first) styles for the left index. These MUST stay outside any
+ * media query so the spine, nodes, and compact typography apply above 900px;
+ * the ≤900px block near the end of this file re-shapes them into a strip.
+ */
+
+/* The identity and section list form one compact navigation column. */
+.section-index__identity {
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* Establish the positioning context for the decorative spine. */
+.section-index__list {
+  position: relative;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: var(--space-lg) 0;
+}
+
+/* One continuous, restrained line behind the section nodes. */
+.section-index__list::before {
+  content: "";
+  position: absolute;
+  left: 29px;
+  top: calc(var(--space-lg) + 10px);
+  bottom: calc(var(--space-lg) + 10px);
+  width: 1px;
+  background: var(--color-border-medium);
+  pointer-events: none;
+}
+
+.section-index__item {
+  position: relative;
+  min-width: 0;
+}
+
+/* Keep the entire item clickable without adding a card background. */
+.section-index__button {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  min-height: 75px;
+  padding: 8px 12px 10px 26px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: color var(--transition-fast);
+}
+
+/* Hollow nodes indicate sections that aren't currently active. */
+.section-index__node {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  margin-top: 3px;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 50%;
+  background: var(--color-surface-panel);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.section-index__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.section-index__number {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.section-index__label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.section-index__button.is-active .section-index__node {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.section-index__button.is-active .section-index__number {
+  color: var(--color-accent);
+}
+
+.section-index__button.is-active .section-index__label {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Quiet hover feedback; no scaling, glow, or background card. */
+.section-index__button:hover .section-index__label {
+  color: var(--color-text-primary);
+}
+
+.section-index__button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -3px;
+}
+
+/* ─── 5. SCROLLBAR ────────────────────────────────────────────────────────── */
+
+/*
+ * Custom scrollbar for the center column.
+ * Thin and muted to not compete with the content.
+ */
+.shell-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.shell-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.shell-content::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: 2px;
+}
+
+/* ─── LAYER 03: GLOBAL INDEPENDENT WALLET LAYER ─────────────────────────── */
+/*
+ * The wallet is an INDEPENDENT GLOBAL ASSET.
+ * It does NOT belong to:
+ *   - Center
+ *   - Overview
+ *   - Featured
+ *   - Left Index
+ *   - Top Identity
+ *   - Any section
+ *   - Any content container
+ *
+ * LAYER 03: Placed downmost rightward, floating above ALL portfolio sections.
+ */
+.wallet-global-layer {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: var(--layer-03-wallet, 100);
+  pointer-events: none;
+}
+
+.wallet-img {
+  width: 215px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.28));
+}
+
+/* Wallet interaction button styling */
+.wallet-trigger {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), filter 180ms ease;
+}
+
+.wallet-trigger:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.wallet-trigger:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* Tablet (max-width: 1100px and min-width: 901px) */
+@media (max-width: 1100px) and (min-width: 901px) {
+  .wallet-img {
+    width: 190px;
+  }
+
+  .wallet-global-layer {
+    bottom: 20px;
+    right: 22px;
+  }
+}
+
+/* Mobile & narrow viewports */
+@media (max-width: 900px) {
+  .wallet-img {
+    width: 165px;
+  }
+
+  .wallet-global-layer {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* ─── 6. KEYFRAME ANIMATIONS ─────────────────────────────────────────────── */
+
+/*
+ * Used by FeaturedPanel when the active section changes.
+ * Subtle opacity fade — communicates content update without being distracting.
+ */
+@keyframes featured-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Phase 03 — Physical Object Entrance Animations
+ *
+ * Restrained, directional physical slide + fade keyframes for workspace assembly.
+ * Objects slide smoothly into their target positions without exaggerated bounce.
+ */
+@keyframes physical-enter-left {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes physical-enter-top {
+  from {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes physical-enter-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes physical-enter-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Phase 13 — Overview Collage Entrance ────────────────────────────────── */
+
+/*
+ * intro-collage-rise
+ *
+ * Triggered once per page load when the loading screen exits (isReady = true).
+ * Each collage item (city polaroid, desk polaroid, notepad) receives this
+ * animation with an individual CSS-variable delay and rotation.
+ *
+ * Motion: rise from +140px below, clear blur, fade in → tiny backward sway
+ * at 85% → lock at final resting position via animation-fill-mode: forwards.
+ *
+ * The settling sway at 85% is a single small counter-rotation (0.4deg) that
+ * makes the physical object feel like it landed rather than glided.
+ */
+@keyframes intro-collage-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(140px) rotate(var(--collage-rot, 0deg));
+    filter: blur(3px);
+  }
+
+  60% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+
+  85% {
+    /* micro-sway: slight counter-rotation to simulate physical settling */
+    transform: translateY(-4px) rotate(calc(var(--collage-rot, 0deg) - 0.4deg));
+    filter: blur(0px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--collage-rot, 0deg));
+    filter: blur(0px);
+  }
+}
+
+/*
+ * prefers-reduced-motion: skip the intro animation entirely.
+ * Items become immediately visible at their final state.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .collage-item-animated {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: rotate(var(--collage-rot, 0deg)) !important;
+    filter: none !important;
+  }
+}
+
+/*
+ * .collage-item-animated
+ *
+ * Applied to each collage item when isReady=true (loading screen has exited).
+ * The animation delay is set via React's inline `animationDelay` style, which
+ * overrides the shorthand delay declared here, enabling per-item stagger without
+ * extra CSS classes.
+ *
+ * animation-fill-mode: forwards locks the final state (opacity:1, no blur,
+ * rotation = --collage-rot) so items stay visible after the animation ends.
+ * animation-iteration-count: 1 ensures it only runs once per page load.
+ */
+.collage-item-animated {
+  animation: intro-collage-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0s;
+  /* overridden per-item by React inline animationDelay */
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+}
+
+/* ─── GLOBAL FLOATING SCRAPBOOK ───────────────────────────── */
+
+.physical-artifacts {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  user-select: none;
+}
+
+.physical-artifact {
+  position: absolute;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.14));
+
+  /* Start below the viewport and rise into place */
+  animation: intro-collage-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Handwritten paper note */
+.physical-note {
+  top: 52%;
+  left: 155px;
+  width: 178px;
+  --collage-rot: -9deg;
+  animation-delay: 180ms;
+}
+
+First photograph .physical-photo--one {
+  top: 59%;
+  left: 28%;
+  width: clamp(115px, 15vw, 190px);
+  /* --collage-rot: -7deg; */
+  animation-delay: 320ms;
+  z-index: 1;
+}
+
+/* Second photograph */
+.physical-photo--two {
+  top: 56%;
+  left: 29%;
+  width: clamp(125px, 17vw, 215px);
+  --collage-rot: 4deg;
+  animation-delay: 460ms;
+  z-index: 2;
+}
+
+/* Smaller placements on mobile */
+@media (max-width: 900px) {
+  .physical-note {
+    top: 18%;
+    left: 12px;
+    width: 76px;
+  }
+
+  .physical-photo--one {
+    top: 62%;
+    left: 8%;
+    width: 105px;
+  }
+
+  .physical-photo--two {
+    top: 66%;
+    left: 25%;
+    width: 115px;
+  }
+}
+
+/* Respect the visitor's reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .physical-artifact {
+    animation: none !important;
+    opacity: 1;
+    transform: rotate(var(--collage-rot, 0deg));
+    filter: none;
+  }
+}
+
+
+/* ─── DESKTOP SECTION CONTAINMENT (ZERO OVERFLOW REQUIREMENT) ────────────── */
+
+/*
+ * ABSOLUTE NO-OVERFLOW REQUIREMENT:
+ * Every desktop section must fit completely inside the available viewport.
+ * AVAILABLE CENTER HEIGHT = 100dvh - TOP BAR HEIGHT
+ */
+@media (min-width: 901px) {
+  .portfolio-section {
+    height: calc(100dvh - var(--shell-top-height));
+    min-height: calc(100dvh - var(--shell-top-height));
+    max-height: calc(100dvh - var(--shell-top-height));
+    box-sizing: border-box;
+    padding: clamp(14px, 2.2vh, 32px) clamp(20px, 2.8vw, 44px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border-subtle);
+    position: relative;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .portfolio-section {
+    min-height: auto;
+    height: auto;
+    padding: var(--space-xl) var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-bottom: 1px solid var(--color-border-subtle);
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+/* ─── OVERVIEW SECTION COMPOSITION (PHASE 13 — FINAL OVERVIEW COMPOSITION) ── */
+
+.overview-section {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (min-width: 901px) {
+  .overview-section {
+    height: calc(100dvh - var(--shell-top-height));
+    min-height: calc(100dvh - var(--shell-top-height));
+    max-height: calc(100dvh - var(--shell-top-height));
+    padding: clamp(12px, 1.8vh, 24px) clamp(16px, 2.4vw, 36px) clamp(10px, 1.4vh, 18px);
+  }
+}
+
+/* ── Main Two-Column Workspace Grid ── */
+.ov-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
+  gap: clamp(20px, 2.6vw, 44px);
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* ── Left Column: Main Portrait Collage + Physical Artifacts ── */
+.ov-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.ov-collage {
+  position: relative;
+  height: 68%;
+  flex: 0 0 68%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.ov-collage .ov-portrait-container {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.ov-collage .ov-portrait-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: left top;
+  border-radius: 0;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.06));
+}
+
+.ov-portrait-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: var(--color-surface-paper);
+  border: 1px dashed var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  gap: 6px;
+}
+
+.ov-placeholder-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-primary);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.ov-placeholder-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ov-placeholder-loc {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+.ov-nameplate {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  margin-top: 78px;
+  margin-left: 20px;
+}
+
+.ov-nameplate-name {
+  left: 20%;
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 35px;
+  font-weight: 850;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.ov-nameplate-subtitle {
+  margin: 14px 0 12px;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.ov-nameplate-rule {
+  width: 83%;
+  height: 1px;
+  background: var(--color-border-subtle);
+}
+
+
+
+/* ── Secondary Physical Artifacts Layer (Static, Lower Placement) ── */
+.ov-collage .ov-artifacts-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ov-collage .ov-artifact-item {
+  position: absolute;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Right Column: Identity + Dashboard System ── */
+.ov-right-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.ov-right-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(clamp(20px, 2.6vw, 44px) / -2);
+  width: 1px;
+  background-color: var(--color-border-subtle);
+  pointer-events: none;
+}
+
+/* ── 1. Top Technical Header ── */
+.ov-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: clamp(5px, 0.9vh, 9px);
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: clamp(6px, 1.2vh, 14px);
+  min-width: 0;
+}
+
+.ov-top-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ov-top-label {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 4.05vh, 10.5px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ov-top-hairline {
+  height: 1px;
+  flex: 1;
+  max-width: 80px;
+  background-color: var(--color-hairline);
+}
+
+.ov-top-descriptor {
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 4vh, 10px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 2. Identity / Hero Grid ── */
+.ov-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  column-gap: clamp(16px, 2.2vw, 32px);
+  row-gap: clamp(8px, 1.2vh, 14px);
+  align-items: start;
+  margin-bottom: clamp(8px, 1.4vh, 18px);
+  min-width: 0;
+}
+
+.ov-hero-primary {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.2vh, 14px);
+  min-width: 0;
+}
+
+.ov-hero-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.94;
+  color: var(--color-ink);
+  margin: 0;
+  font-size: clamp(26px, 10vh, 8.2vh);
+  padding-bottom: 10px;
+  padding-top: 20px;
+}
+
+.ov-headline-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.ov-headline-city {
+  display: block;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.ov-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  flex-wrap: nowrap;
+}
+
+.ov-action-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: clamp(6px, 0.95vh, 12px) clamp(12px, 1.3vw, 18px);
+  background-color: var(--color-ink);
+  color: var(--color-surface-base);
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 1.25vh, 20px);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: transform 120ms ease;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.ov-action-primary:hover {
+  transform: translateY(-1px);
+}
+
+.ov-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1.15vh, 20px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-bottom: 1px solid var(--color-text-primary);
+  cursor: pointer;
+  transition: transform 120ms ease;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.ov-action-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.ov-hero-secondary {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 1vw, 14px);
+  padding-top: 44px;
+  min-width: 0;
+}
+
+.ov-desc-num {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.1vh, 11.5px);
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-desc-text {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.9vh, 10px);
+  min-width: 0;
+}
+
+.ov-desc-text p {
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 1.2vh, 11px);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.ov-desc-sub {
+  color: var(--color-text-primary) !important;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* ── 3. Work Register / Systems Table ── */
+.ov-table-wrap {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: clamp(8px, 1.4vh, 16px);
+  flex-shrink: 0;
+}
+
+.ov-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: clamp(4px, 0.7vh, 6px);
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: 0;
+}
+
+.ov-table-title {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1.05vh, 10px);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.ov-table-context {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 0.95vh, 9.5px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.ov-table-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.ov-work-row {
+  display: grid;
+  grid-template-columns: 28px 1px minmax(110px, 1.2fr) 1px minmax(0, 2fr) 1px 24px;
+  column-gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-height: clamp(32px, 4.2vh, 44px);
+  border: none;
+  border-bottom: 1px solid var(--color-hairline);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transition: background-color 120ms ease;
+  outline: none;
+  min-width: 0;
+}
+
+.ov-work-row:hover {
+  background-color: rgba(17, 17, 17, 0.025);
+}
+
+.ov-work-row:focus-visible {
+  outline: 1px solid var(--color-text-primary);
+  outline-offset: -1px;
+}
+
+.ov-row-idx {
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 1.1vh, 11px);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-row-divider {
+  height: 60%;
+  width: 1px;
+  background-color: var(--color-hairline);
+}
+
+.ov-row-name {
+  font-family: var(--font-mono);
+  font-size: clamp(11.5px, 1.35vh, 13.5px);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+  padding-left: 9px;
+  min-width: 0;
+}
+
+.ov-row-desc {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1.1vh, 11px);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 9px;
+  min-width: 0;
+}
+
+.ov-row-arrow {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.3vh, 14px);
+  color: var(--color-text-muted);
+  text-align: right;
+  transition: transform 120ms ease, color 120ms ease;
+}
+
+.ov-work-row:hover .ov-row-arrow {
+  transform: translateX(3px);
+  color: var(--color-text-primary);
+}
+
+/* ── 4. Lower Information Band ── */
+.ov-lower-band {
+  border-top: 1px solid var(--color-hairline);
+  padding-top: clamp(6px, 1vh, 12px);
+  margin-top: auto;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.ov-lower-lead {
+  padding-right: clamp(10px, 1.5vw, 20px);
+  padding-top: 2px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 0.95vh, 9px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+
+.ov-lower-arrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.ov-meta-grid {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+}
+
+.ov-meta-cell {
+  flex: 1;
+  padding: clamp(4px, 0.7vh, 8px) clamp(8px, 1.2vw, 16px);
+  border-left: 1px solid var(--color-hairline);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  gap: 2px;
+}
+
+.ov-meta-cell:first-child {
+  border-left: none;
+}
+
+.ov-cell-label {
+  font-family: var(--font-mono);
+  font-size: clamp(7.5px, 0.9vh, 9px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ov-cell-value {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.25vh, 12.5px);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+/* ── Mobile Layout (≤900px) ── */
+@media (max-width: 900px) {
+  .ov-workspace-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .ov-left-col {
+    height: auto;
+    align-items: center;
+  }
+
+  .ov-portrait-img {
+    max-height: 55vh;
+    max-width: 320px;
+    margin: 0 auto;
+    object-position: center top;
+  }
+
+  .ov-artifacts-layer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 8px;
+  }
+
+  .ov-artifact-item {
+    position: static;
+    max-width: 30%;
+    max-height: 90px;
+  }
+
+  .ov-hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ov-hero-primary {
+    width: 100%;
+  }
+
+  .ov-right-col::before {
+    display: none;
+  }
+
+  .ov-work-row {
+    grid-template-columns: 24px 1px minmax(0, 1fr) 1px auto;
+    column-gap: 6px;
+    padding: 6px 0;
+    min-height: 40px;
+  }
+
+  .ov-work-row .ov-row-desc {
+    display: none;
+  }
+
+  .ov-work-row .ov-row-divider:nth-of-type(6) {
+    display: none;
+  }
+
+  .ov-lower-band {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .ov-lower-arrow {
+    align-self: flex-start;
+    line-height: 1.2;
+  }
+
+  .ov-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .ov-meta-cell {
+    border-left: none;
+    border-bottom: 1px solid var(--color-hairline);
+    padding: 6px 0;
+  }
+}
+
+/* ── Tablet Layout (901–1100px): keep descriptions/metadata readable ──
+   Right column is narrow (~323px @1024). Tighten type so content fits. */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .ov-row-name {
+    font-size: 11.5px;
+  }
+
+  .ov-row-desc {
+    font-size: 9px;
+    line-height: 1.35;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .ov-cell-label {
+    font-size: 7.5px;
+    letter-spacing: 0.04em;
+  }
+
+  .ov-cell-value {
+    font-size: 10px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.3;
+  }
+
+  .ov-meta-cell {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+
+
+
+/*
+ * Phase 04 responsive shell breakdown:
+ *
+ * Desktop (>900px)
+ *   - CSS Grid: fixed Top | fixed Left | scrollable Center | fixed Featured
+ *   - Wallet: fixed bottom-right, independent Layer 03
+ *
+ * Tablet (901–1100px)
+ *   - Same 3-column grid, Featured can be narrower
+ *   - Wallet: bottom-right, slightly inset
+ *
+ * Mobile (≤900px)
+ *   - Flex column layout: Top → Left (horizontal strip) → Center → Featured
+ *   - Body scroll is used (center overflow-y becomes visible)
+ *   - Wallet: repositions bottom-right, smaller
+ *   - No horizontal overflow
+ */
+
+/* ─── Tablet (901px – 1100px) ─────────────────────────────────────────────── */
+@media (max-width: 1100px) and (min-width: 901px) {
+  :root {
+    --shell-right-width: 180px;
+    --shell-left-width: 180px;
+  }
+}
+
+/* ─── Mobile (≤900px) ─────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .portfolio-shell {
+    /*
+     * On mobile the 3-column fixed grid is replaced with a simple flex column.
+     * Height becomes auto so body scroll takes over — the center no longer
+     * needs its own scroll container.
+     */
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .shell-content {
+    /*
+     * Center scroll container: on mobile, body handles the primary scroll,
+     * so we disable the container's own overflow and let content be its
+     * natural height.
+     */
+    overflow: visible;
+  }
+
+  .shell-index {
+    /*
+     * Mobile: the index collapses into one horizontally scrolling strip under
+     * the top identity bar. The rules below reshape the desktop column into
+     * compact tabs; the spine and nodes are desktop-only.
+     */
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    /* strip is swiped, not dragged via scrollbar */
+  }
+
+  .shell-index::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ─── SECTION INDEX — MOBILE STRIP ─────────────────────────────────────── */
+
+  .section-index__identity {
+    display: none;
+    /* the top bar already carries the name */
+  }
+
+  .section-index__list {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .section-index__list::before {
+    display: none;
+    /* no vertical spine in a horizontal strip */
+  }
+
+  .section-index__item {
+    flex: 0 0 auto;
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  .section-index__button {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: auto;
+    min-height: 104px;
+    /* single-row tab with a comfortable tap target */
+    padding: 9px 14px 10px;
+  }
+
+  .section-index__node {
+    display: none;
+  }
+
+  .section-index__label {
+    white-space: nowrap;
+    /* labels stay on one line; the strip scrolls */
+  }
+
+  .section-index__button.is-active {
+    box-shadow: inset 0 -2px 0 var(--color-accent);
+  }
+
+  .section-index__button:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .shell-featured {
+    /*
+     * Featured panel: drops out of the fixed right column and flows after
+     * the center content. Preserved in the visual flow — not hidden.
+     */
+    border-left: none;
+    border-top: 1px solid var(--color-border-subtle);
+    overflow: visible;
+  }
+
+  /* Mobile: wallet repositions to bottom-right, reduced size */
+  .wallet-global-layer {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .wallet-img {
+    width: 155px;
+  }
+}
+
+/* ─── Very small screens (≤480px) ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .wallet-global-layer {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .wallet-img {
+    width: 135px;
+  }
+}
